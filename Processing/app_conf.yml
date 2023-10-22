@@ -1,0 +1,9 @@
+version: 1
+datastore:
+  filename: data.json
+scheduler:
+  period_sec: 5
+eventstore:
+  rate: http://localhost:8090/movies/rate
+  save: http://localhost:8090/movies/save
+

@@ -1,0 +1,9 @@
+version: 1
+eventrate:
+  url: http://localhost:8090/movies/rate
+eventsave:
+  url: http://localhost:8090/movies/save
+events:
+  hostname: aviacit3855.westus3.cloudapp.azure.com
+  port: 9092
+  topic: events

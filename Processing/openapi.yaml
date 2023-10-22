@@ -1,0 +1,52 @@
+openapi: 3.0.0
+info:
+  description: This API provides event stats
+  version: "1.0.0"
+  title: Stats API
+  contact:
+    email: asoboleva@my.bcit.ca
+paths:
+  /movies/stats:
+    get:
+      summary: Gets the event stats
+      operationId: app.get_stats
+      description: Gets Blood rate and save processsed statistics
+      responses:
+        '200':
+          description: Successfully returned a list of events
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/ReadingStats'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    ReadingStats:
+      required:
+      - num_rate_readings
+      - num_save_readings
+      - most_active_user
+      - highest_rated
+      properties:
+        num_rate_readings:
+          type: integer
+          example: 20
+        num_save_readings:
+          type: integer
+          example: 50
+        most_active_user:
+          type: integer
+          example: 35043538
+        highest_rating:
+          type: integer
+          example: 9

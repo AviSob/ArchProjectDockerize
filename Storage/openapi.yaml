@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  description: This API rates and reviews movies
+  version: 1.0.0
+  title: Movie Recommendation API
+tags:
+  - name: users
+    description: Operations available to regular users
+paths:
+  /movies/rate:
+    get:
+      description: Returns a list of movie ratings
+      operationId: app.get_rated_movies
+      parameters:
+        - name: timestamp
+          in: query
+          description: Gets movies rated after a timestamp
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        '200':
+          description: Successfully returned a list of blood pressure events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovieRating'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                   type: string 
+                   example: Invalid request message
+  /movies/save:
+    get:
+      description: Returns a list of saved movies
+      operationId: app.get_saved_movies
+      parameters:
+        - name: timestamp
+          in: query
+          description: Gets movies saved after a timestamp
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        '200':
+          description: Successfully returned a list of blood pressure events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovieSaveRequest'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid request message
+components:
+  schemas:
+    MovieRating:
+      type: object
+      properties:
+        movie_id:
+          type: string
+          example: breaking_bad_01
+        movie_name:
+          type: string
+          example: Breaking Bad
+        rating:
+          type: number
+          example: 10
+        review:
+          type: string
+          example: its great yall
+      required:
+        - movie_id
+        - rating
+        - review
+    MovieSaveRequest:
+      type: object
+      properties:
+        user_id:
+          type: number
+          example: 19238902
+        movie_id:
+          type: string
+          example: breaking_bad
+        save_date:
+          type: string
+          format: date
+          example: '2023-08-09'
+        notes:
+          type: string
+          example: "Must-watch series"
+        season:
+          type: number
+          example: 1
+      required:
+        - user_id
+        - movie_id
+        - season
