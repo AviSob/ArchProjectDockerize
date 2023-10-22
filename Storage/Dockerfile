@@ -1,7 +1,8 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 LABEL maintainer = "asoboleva@my.bcit.ca"
 RUN apt-get update -y && \
-apt-get install -y python3 python3-pip flask
+apt-get install -y python3 python3-pip && \
+pip3 install -U flask
 # We copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
