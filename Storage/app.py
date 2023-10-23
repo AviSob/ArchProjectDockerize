@@ -1,6 +1,5 @@
 import connexion
 from connexion import NoContent
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from base import Base
@@ -78,18 +77,14 @@ def process_messages():
     """ Process event messages """
     hostname = "%s:%d" % (app_config["events"]["hostname"],
                           app_config["events"]["port"])
-    # client = KafkaClient(hosts=hostname)
-    # topic = client.topics[str.encode(app_config["events"]["topic"])]
     while True:
         try:
             client = KafkaClient(hosts=hostname)
             topic = client.topics[str.encode(app_config["events"]["topic"])]
-            # Successfully connected to Kafka, break the loop
+            logger.info(f"Succesfully connected to Kafka")
             break
         except Exception as e:
-            # Handle the exception (e.g., log the error)
-            print(f">>>>>>> Failed to connect to Kafka: {e}")
-            # Add a delay before retrying
+            logger.error(f"Failed to connect to Kafka: {e} | Retrying in 10 seconds...")
             time.sleep(10)
 
     # Create a consume on a consumer group, that only reads new messages
@@ -104,9 +99,6 @@ def process_messages():
 
         payload = msg["payload"]
         body = json.loads(payload)
-        # print(">>>>>>>>>>>>>>>")
-        # print(body)
-        # print(">>>>>>>>>>>>>>>")
 
         if msg["type"] == "rate":
             logger.info(f'Connecting to DB. Hostname: {hostname}, Port: {port}')
