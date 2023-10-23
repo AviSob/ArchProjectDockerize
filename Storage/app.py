@@ -15,6 +15,7 @@ import json
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread
+import time
 
 
 # load config files
@@ -77,8 +78,19 @@ def process_messages():
     """ Process event messages """
     hostname = "%s:%d" % (app_config["events"]["hostname"],
                           app_config["events"]["port"])
-    client = KafkaClient(hosts=hostname)
-    topic = client.topics[str.encode(app_config["events"]["topic"])]
+    # client = KafkaClient(hosts=hostname)
+    # topic = client.topics[str.encode(app_config["events"]["topic"])]
+    while True:
+        try:
+            client = KafkaClient(hosts=hostname)
+            topic = client.topics[str.encode(app_config["events"]["topic"])]
+            # Successfully connected to Kafka, break the loop
+            break
+        except Exception as e:
+            # Handle the exception (e.g., log the error)
+            print(f">>>>>>> Failed to connect to Kafka: {e}")
+            # Add a delay before retrying
+            time.sleep(10)
 
     # Create a consume on a consumer group, that only reads new messages
     consumer = topic.get_simple_consumer(consumer_group=b'event_group', reset_offset_on_start=False, auto_offset_reset=OffsetType.LATEST)
