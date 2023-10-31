@@ -1,0 +1,12 @@
+version: 1
+datastore:
+  user: "root"
+  password: "password"
+  hostname: db
+  port: 3306
+  db: "movies"
+events:
+  hostname: 405245b552c0
+  port: 9092
+  topic: events
+
