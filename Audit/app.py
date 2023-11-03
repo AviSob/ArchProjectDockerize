@@ -9,7 +9,7 @@ import logging.config
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 
 with open('app_conf.yml', 'r') as f:
     app_config = yaml.safe_load(f.read())
@@ -82,7 +82,8 @@ def get_movie_saved(index): #/movies/movie_ratings?index=X
 
 
 app = connexion.FlaskApp(__name__, specification_dir='')
-CORS(app.app)
+CORS(app.app, resources={r"/*": {"origins": "*"}})
+# CORS(app.app)
 app.app.config['CORS_HEADERS'] = 'Content-Type'
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
 
