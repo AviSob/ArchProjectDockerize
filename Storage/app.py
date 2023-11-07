@@ -1,6 +1,6 @@
 import connexion
 from connexion import NoContent
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 from base import Base
 from movie_rating import MovieRating
@@ -40,35 +40,38 @@ Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 # =============== GET
-def get_rated_movies(timestamp):
+def get_rated_movies(start_timestamp, end_timestamp):
     """ Gets movies rated after the timestamp """
     session = DB_SESSION()
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
-    readings = session.query(MovieRating).filter(MovieRating.date_created >= timestamp_datetime)
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
 
+    readings = session.query(MovieRating).filter(and_ (MovieRating.date_created >= start_timestamp_datetime,  MovieRating.date_created < end_timestamp_datetime))
     results_list = []
 
     for reading in readings:
         results_list.append(reading.to_dict())
 
     session.close()
-    logger.info(f"Query for movies rated after {timestamp} returns {len(results_list)} results")
+    logger.info(f"Query for movies rated after {start_timestamp} returns {len(results_list)} results")
 
     return results_list, 200
 
 
-def get_saved_movies(timestamp):
+def get_saved_movies(start_timestamp, end_timestamp):
     """ Gets movies saved after the timestamp """
     session = DB_SESSION()
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
-    readings = session.query(SavedMovies).filter(SavedMovies.date_created >= timestamp_datetime)
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    
+    readings = session.query(MovieRating).filter(and_ (SavedMovies.date_created >= start_timestamp_datetime,  SavedMovies.date_created < end_timestamp_datetime))
     results_list = []
 
     for reading in readings:
         results_list.append(reading.to_dict())
 
     session.close()
-    logger.info(f"Query for movies saved after {timestamp} returns {len(results_list)} results")
+    logger.info(f"Query for movies saved after {start_timestamp} returns {len(results_list)} results")
 
     return results_list, 200
 
