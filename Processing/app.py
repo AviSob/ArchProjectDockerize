@@ -45,7 +45,7 @@ def populate_stats():
     end_timestamp = (datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"))
 
     headers = { 'accept': 'application/json' }
-    parameters = { 'timestamp': received_timestamp, 'end_timestamp':  end_timestamp}
+    parameters = { 'start_timestamp': received_timestamp, 'end_timestamp':  end_timestamp}
 
     # -- RATE stats
     URLRATE = app_config["eventstore"]["rate"]
