@@ -1,7 +1,8 @@
 import connexion
 from connexion import NoContent
-from sqlalchemy import create_engine, and_
-from sqlalchemy.orm import sessionmaker
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, and_
 from base import Base
 from movie_rating import MovieRating
 from saved_movies import SavedMovies
@@ -14,7 +15,6 @@ import json
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread
-import time
 
 
 # load config files
@@ -43,17 +43,24 @@ DB_SESSION = sessionmaker(bind=DB_ENGINE)
 def get_rated_movies(start_timestamp, end_timestamp):
     """ Gets movies rated after the timestamp """
     session = DB_SESSION()
+    
     start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
     end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    
+    # readings = session.query(MovieRating).filter(MovieRating.date_created >= start_timestamp_datetime)
+    readings = session.query(MovieRating).filter(and_(MovieRating.date_created >= start_timestamp_datetime,MovieRating.date_created < end_timestamp_datetime))
+    
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    print(readings)
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
-    readings = session.query(MovieRating).filter(and_ (MovieRating.date_created >= start_timestamp_datetime,  MovieRating.date_created < end_timestamp_datetime))
     results_list = []
 
     for reading in readings:
         results_list.append(reading.to_dict())
 
     session.close()
-    logger.info(f"Query for movies rated after {start_timestamp} returns {len(results_list)} results")
+    logger.info(f"Query for movies rated between {start_timestamp} and {end_timestamp} returns {len(results_list)} results")
 
     return results_list, 200
 
@@ -61,17 +68,24 @@ def get_rated_movies(start_timestamp, end_timestamp):
 def get_saved_movies(start_timestamp, end_timestamp):
     """ Gets movies saved after the timestamp """
     session = DB_SESSION()
+    
     start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
     end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+
+    # readings = session.query(SavedMovies).filter(SavedMovies.date_created >= timestamp_datetime)
+    readings = session.query(SavedMovies).filter(and_(SavedMovies.date_created >= start_timestamp_datetime,SavedMovies.date_created < end_timestamp_datetime))
     
-    readings = session.query(MovieRating).filter(and_ (SavedMovies.date_created >= start_timestamp_datetime,  SavedMovies.date_created < end_timestamp_datetime))
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    print(readings)
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    
     results_list = []
 
     for reading in readings:
         results_list.append(reading.to_dict())
 
     session.close()
-    logger.info(f"Query for movies saved after {start_timestamp} returns {len(results_list)} results")
+    logger.info(f"Query for movies saved between {start_timestamp} and {end_timestamp} returns {len(results_list)} results")
 
     return results_list, 200
 
@@ -80,15 +94,8 @@ def process_messages():
     """ Process event messages """
     hostname = "%s:%d" % (app_config["events"]["hostname"],
                           app_config["events"]["port"])
-    while True:
-        try:
-            client = KafkaClient(hosts=hostname)
-            topic = client.topics[str.encode(app_config["events"]["topic"])]
-            logger.info(f"Succesfully connected to Kafka")
-            break
-        except Exception as e:
-            logger.error(f"Failed to connect to Kafka: {e} | Retrying in 10 seconds...")
-            time.sleep(10)
+    client = KafkaClient(hosts=hostname)
+    topic = client.topics[str.encode(app_config["events"]["topic"])]
 
     # Create a consume on a consumer group, that only reads new messages
     consumer = topic.get_simple_consumer(consumer_group=b'event_group', reset_offset_on_start=False, auto_offset_reset=OffsetType.LATEST)

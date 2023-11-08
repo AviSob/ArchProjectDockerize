@@ -10,7 +10,6 @@ import apscheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 import os.path
 from collections import Counter
-from flask_cors import CORS, cross_origin
 
 
 # load config files
@@ -39,23 +38,32 @@ def populate_stats():
             stats = json.load(f3)
     else:
         # If the file doesn’t yet exist, use default values for the stats??????
-        stats = {'num_rate_readings': 0, 'highest_rated': 0, 'num_saves_readings': 0, 'most_active_user': 1, 'last_updated': '1800-01-07T11:46:09Z'} 
+        stats = {'num_rate_readings': 0, 'highest_rated': 0, 'num_saves_readings': 0, 'most_active_user': 1, 'last_updated': '1800-01-01T23:59:59Z'}
 
-    received_timestamp = stats["last_updated"]
-    end_timestamp = (datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"))
+    last_updated = stats["last_updated"]
+    current_timestamp = (datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"))
 
     headers = { 'accept': 'application/json' }
-    parameters = { 'start_timestamp': received_timestamp, 'end_timestamp':  end_timestamp}
+    parameters = { 'timestamp': last_updated }
+    
 
     # -- RATE stats
     URLRATE = app_config["eventstore"]["rate"]
-    result_raw = requests.get(URLRATE, headers=headers, params=parameters)
+    # result_raw = requests.get(URLRATE, headers=headers, params=parameters)
+    result_raw = requests.get(app_config["eventstore"]["rate"] + "/movies/rate?start_timestamp=" + last_updated + "&end_timestamp=" + current_timestamp)
     rate_result=result_raw.json()
+    print("<<<<<<<<<<<<<<<<<")
+    print(rate_result)
+    print("<<<<<<<<<<<<<<<<<")
 
     # # -- SAVE stats
     URLSAVE = app_config["eventstore"]["save"]
-    result_raw2 = requests.get(URLSAVE, headers=headers, params=parameters)
+    # result_raw2 = requests.get(URLSAVE, headers=headers, params=parameters)
+    result_raw2 = requests.get(app_config["eventstore"]["save"] + "/movies/save?start_timestamp=" + last_updated + "&end_timestamp=" + current_timestamp)
     save_result=result_raw2.json()
+    print("<<<<<<<<<<<<<<<<<")
+    print(save_result)
+    print("<<<<<<<<<<<<<<<<<")
 
     # -- RATE stats
     if(len(rate_result) == 0):
@@ -86,12 +94,13 @@ def populate_stats():
     "highest_rated": updated_highest_rated,
     "num_saves_readings": updated_num_saves_readings,
     "most_active_user": updated_highest_rated,
-    "last_updated": end_timestamp
+    "last_updated": current_timestamp
     }
 
     with open(EVENT_FILE, 'w') as file:
         json.dump(newstats, file, indent=2)
         # Note that values in the data.json file should correspond to the values in the JSON response from your GET /stats endpoint.
+        # ^ ive been reading this over and over and still dont understand if im correct yall. its past 11
 
     logger.debug(newstats)
     logger.info("---------------------> Periodic processing complete...")
@@ -120,8 +129,6 @@ def get_stats(): #/stats
     return statsread, 200
 
 app = connexion.FlaskApp(__name__, specification_dir='')
-CORS(app.app)
-app.app.config['CORS_HEADERS'] = 'Content-Type'
 app.add_api("openapi.yaml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ paths:
           schema:
             type: string
             format: date-time
-            example: 2016-09-29T09:12:33.001Z
+            example: 2016-08-29T09:12:33.001Z
       responses:
         '200':
           description: Successfully returned a list of blood pressure events
@@ -52,18 +52,18 @@ paths:
       parameters:
         - name: start_timestamp
           in: query
-          description: Gets movies rated after a timestamp
+          description: Gets movies saved after a timestamp
           schema:
             type: string
             format: date-time
             example: 2016-08-29T09:12:33.001Z
         - name: end_timestamp
           in: query
-          description: Gets movies rated before a timestamp
+          description: Gets movies saved before a timestamp
           schema:
             type: string
             format: date-time
-            example: 2016-09-29T09:12:33.001Z
+            example: 2016-08-29T09:12:33.001Z
       responses:
         '200':
           description: Successfully returned a list of blood pressure events
