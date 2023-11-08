@@ -39,7 +39,7 @@ def populate_stats():
             stats = json.load(f3)
     else:
         # If the file doesn’t yet exist, use default values for the stats??????
-        stats = {'num_rate_readings': 0, 'highest_rated': 0, 'num_saves_readings': 0, 'most_active_user': 1, 'last_updated': '1800-01-01T23:59:59Z'}
+        stats = {'num_rate_readings': 0, 'highest_rated': 0, 'num_saves_readings': 0, 'most_active_user': 1, 'last_updated': '1800-01-07T11:46:09Z'} 
 
     received_timestamp = stats["last_updated"]
     end_timestamp = (datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"))

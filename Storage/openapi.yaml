@@ -12,13 +12,20 @@ paths:
       description: Returns a list of movie ratings
       operationId: app.get_rated_movies
       parameters:
-        - name: timestamp
+        - name: start_timestamp
           in: query
           description: Gets movies rated after a timestamp
           schema:
             type: string
             format: date-time
             example: 2016-08-29T09:12:33.001Z
+        - name: end_timestamp
+          in: query
+          description: Gets movies rated before a timestamp
+          schema:
+            type: string
+            format: date-time
+            example: 2016-09-29T09:12:33.001Z
       responses:
         '200':
           description: Successfully returned a list of blood pressure events
@@ -43,13 +50,20 @@ paths:
       description: Returns a list of saved movies
       operationId: app.get_saved_movies
       parameters:
-        - name: timestamp
+        - name: start_timestamp
           in: query
-          description: Gets movies saved after a timestamp
+          description: Gets movies rated after a timestamp
           schema:
             type: string
             format: date-time
             example: 2016-08-29T09:12:33.001Z
+        - name: end_timestamp
+          in: query
+          description: Gets movies rated before a timestamp
+          schema:
+            type: string
+            format: date-time
+            example: 2016-09-29T09:12:33.001Z
       responses:
         '200':
           description: Successfully returned a list of blood pressure events
