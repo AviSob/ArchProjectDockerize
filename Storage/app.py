@@ -1,8 +1,8 @@
 import connexion
 from connexion import NoContent
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, and_
+from sqlalchemy import create_engine, and_
+from sqlalchemy.orm import sessionmaker
 from base import Base
 from movie_rating import MovieRating
 from saved_movies import SavedMovies
