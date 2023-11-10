@@ -44,18 +44,13 @@ def populate_stats():
 
     last_updated = stats["last_updated"]
 
-    # headers = { 'accept': 'application/json' }
-    # parameters = { 'timestamp': received_timestamp }
-
     # -- RATE stats
     URLRATE = app_config["eventstore"]["rate"]
-    # result_raw = requests.get(URLRATE, headers=headers, params=parameters)
     result_raw = requests.get(URLRATE + "?start_timestamp=" + last_updated + "&end_timestamp=" + current_timestamp)
     rate_result=result_raw.json()
 
     # # -- SAVE stats
     URLSAVE = app_config["eventstore"]["save"]
-    # result_raw2 = requests.get(URLSAVE, headers=headers, params=parameters)
     result_raw2 = requests.get(URLSAVE + "?start_timestamp=" + last_updated + "&end_timestamp=" + current_timestamp)
     save_result=result_raw2.json()
 
