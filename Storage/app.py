@@ -44,10 +44,10 @@ DB_SESSION = sessionmaker(bind=DB_ENGINE)
 def get_rated_movies(start_timestamp, end_timestamp):
     """ Gets movies rated between times """
     session = DB_SESSION()
-    
-    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%S")
+
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
     # %Y-%m-%dT%H:%M:%S
-    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%S")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
     
     # readings = session.query(MovieRating).filter(MovieRating.date_created >= timestamp_datetime)
     readings = session.query(MovieRating).filter( and_ (MovieRating.date_created >= start_timestamp_datetime, MovieRating.date_created < end_timestamp_datetime))
@@ -71,10 +71,10 @@ def get_saved_movies(start_timestamp, end_timestamp):
     """ Gets movies saved after the timestamp """
     session = DB_SESSION()
     
-    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%S")
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%SZ")
     # %Y-%m-%dT%H:%M:%S
-    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%S")
-    
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+
     # readings = session.query(SavedMovies).filter(SavedMovies.date_created >= timestamp_datetime)
     readings = session.query(SavedMovies).filter( and_ (SavedMovies.date_created >= start_timestamp_datetime, SavedMovies.date_created < end_timestamp_datetime))
     
