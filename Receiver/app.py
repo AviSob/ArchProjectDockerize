@@ -7,6 +7,7 @@ import yaml
 import logging
 import logging.config
 from pykafka import KafkaClient
+import time
 
 # load config files
 with open('app_conf.yml', 'r') as f:
@@ -22,6 +23,17 @@ kafka_server=app_config['events']['hostname']
 kafka_port=app_config['events']['port']
 kafka_topic=app_config['events']['topic']
 
+# connect kafka
+while True:
+    try:
+        client = KafkaClient(hosts=f'{kafka_server}:{kafka_port}')
+        topic = client.topics[str.encode(kafka_topic)]
+        logger.info(f"Succesfully connected to Kafka")
+        break
+    except Exception as e:
+        logger.error(f"Failed to connect to Kafka: {e} | Retrying in 10 seconds...")
+        time.sleep(10)
+
 # For logging
 def log_data(event, choice):
     header = {"Content-Type":"application/json"}
@@ -31,9 +43,7 @@ def log_data(event, choice):
 
     logger.debug(f'Received event {choice} request with a trace id of {trace_id}')
 
-    # get kafka ready and sent message
-    client = KafkaClient(hosts=f'{kafka_server}:{kafka_port}')
-    topic = client.topics[str.encode(kafka_topic)]
+    # get producer
     producer = topic.get_sync_producer()
 
     # build message
