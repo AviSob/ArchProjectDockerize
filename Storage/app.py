@@ -14,6 +14,7 @@ import json
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread
+from sqlalchemy import and_
 import time
 
 
@@ -40,35 +41,54 @@ Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 # =============== GET
-def get_rated_movies(timestamp):
-    """ Gets movies rated after the timestamp """
+def get_rated_movies(start_timestamp, end_timestamp):
+    """ Gets movies rated between times """
     session = DB_SESSION()
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
-    readings = session.query(MovieRating).filter(MovieRating.date_created >= timestamp_datetime)
-
+    
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%S")
+    # %Y-%m-%dT%H:%M:%S
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%S")
+    
+    # readings = session.query(MovieRating).filter(MovieRating.date_created >= timestamp_datetime)
+    readings = session.query(MovieRating).filter( and_ (MovieRating.date_created >= start_timestamp_datetime, MovieRating.date_created < end_timestamp_datetime))
+    
+    print("<<<<<<<<<<")
+    print(readings)
+    print("<<<<<<<<<<")
+    
     results_list = []
 
     for reading in readings:
         results_list.append(reading.to_dict())
 
     session.close()
-    logger.info(f"Query for movies rated after {timestamp} returns {len(results_list)} results")
+    logger.info(f"Query for movies rated between {start_timestamp} and {end_timestamp} returns {len(results_list)} results")
 
     return results_list, 200
 
 
-def get_saved_movies(timestamp):
+def get_saved_movies(start_timestamp, end_timestamp):
     """ Gets movies saved after the timestamp """
     session = DB_SESSION()
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
-    readings = session.query(SavedMovies).filter(SavedMovies.date_created >= timestamp_datetime)
+    
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%dT%H:%M:%S")
+    # %Y-%m-%dT%H:%M:%S
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%S")
+    
+    # readings = session.query(SavedMovies).filter(SavedMovies.date_created >= timestamp_datetime)
+    readings = session.query(SavedMovies).filter( and_ (SavedMovies.date_created >= start_timestamp_datetime, SavedMovies.date_created < end_timestamp_datetime))
+    
+    print("<<<<<<<<<<")
+    print(readings)
+    print("<<<<<<<<<<")
+    
     results_list = []
 
     for reading in readings:
         results_list.append(reading.to_dict())
 
     session.close()
-    logger.info(f"Query for movies saved after {timestamp} returns {len(results_list)} results")
+    logger.info(f"Query for movies saved between {start_timestamp} and {end_timestamp} returns {len(results_list)} results")
 
     return results_list, 200
 

@@ -32,6 +32,7 @@ def populate_stats():
 
     log_file = log_config['handlers']['file']['filename']
     logger.info("====================> Periodic processing started...")
+    current_timestamp = (datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"))
 
     # read current json
     if(os.path.isfile(EVENT_FILE)):
@@ -41,19 +42,21 @@ def populate_stats():
         # If the file doesn’t yet exist, use default values for the stats??????
         stats = {'num_rate_readings': 0, 'highest_rated': 0, 'num_saves_readings': 0, 'most_active_user': 1, 'last_updated': '1800-01-01T23:59:59Z'}
 
-    received_timestamp = stats["last_updated"]
+    last_updated = stats["last_updated"]
 
-    headers = { 'accept': 'application/json' }
-    parameters = { 'timestamp': received_timestamp }
+    # headers = { 'accept': 'application/json' }
+    # parameters = { 'timestamp': received_timestamp }
 
     # -- RATE stats
     URLRATE = app_config["eventstore"]["rate"]
-    result_raw = requests.get(URLRATE, headers=headers, params=parameters)
+    # result_raw = requests.get(URLRATE, headers=headers, params=parameters)
+    result_raw = requests.get(URLRATE + "/movies/rate?start_timestamp=" + last_updated + "&end_timestamp=" + current_timestamp)
     rate_result=result_raw.json()
 
     # # -- SAVE stats
     URLSAVE = app_config["eventstore"]["save"]
-    result_raw2 = requests.get(URLSAVE, headers=headers, params=parameters)
+    # result_raw2 = requests.get(URLSAVE, headers=headers, params=parameters)
+    result_raw2 = requests.get(URLSAVE + "/movies/save?start_timestamp=" + last_updated + "&end_timestamp=" + current_timestamp)
     save_result=result_raw2.json()
 
     # -- RATE stats
@@ -78,7 +81,6 @@ def populate_stats():
     updated_num_saves_readings= num_saves_readings + stats["num_saves_readings"]
     updated_highest_rated= max(highest_rated,stats["highest_rated"])
     updated_highest_rated = max(most_active_user,stats["most_active_user"])
-    received_timestamp = (datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"))
     # note not sure what to do with most common user calc here...
 
     newstats = {
@@ -86,7 +88,7 @@ def populate_stats():
     "highest_rated": updated_highest_rated,
     "num_saves_readings": updated_num_saves_readings,
     "most_active_user": updated_highest_rated,
-    "last_updated": received_timestamp
+    "last_updated": current_timestamp
     }
 
     with open(EVENT_FILE, 'w') as file:
