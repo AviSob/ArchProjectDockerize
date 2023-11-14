@@ -28,6 +28,8 @@ while True:
     try:
         client = KafkaClient(hosts=f'{kafka_server}:{kafka_port}')
         topic = client.topics[str.encode(kafka_topic)]
+        # get producer
+        producer = topic.get_sync_producer()
         logger.info(f"Succesfully connected to Kafka")
         break
     except Exception as e:
@@ -42,9 +44,6 @@ def log_data(event, choice):
     body = json.dumps(event)
 
     logger.debug(f'Received event {choice} request with a trace id of {trace_id}')
-
-    # get producer
-    producer = topic.get_sync_producer()
 
     # build message
     msg = { "type": f"{choice}", "datetime" : datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"), "payload": body }
