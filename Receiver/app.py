@@ -20,10 +20,10 @@ else:
     log_conf_file = "log_conf.yml"
 
 # load config files
-with open('app_conf.yml', 'r') as f:
+with open(app_conf_file, 'r') as f:
     app_config = yaml.safe_load(f.read())
 
-with open('log_conf.yml', 'r') as f2:
+with open(log_conf_file, 'r') as f2:
     log_config = yaml.safe_load(f2.read())
     logging.config.dictConfig(log_config)
 logger = logging.getLogger('basicLogger')
