@@ -39,18 +39,15 @@ EVENT_FILE = app_config["datastore"]["filename"]
 # --- Check if logs json file exists, or if its empty ---
 if os.path.isfile(EVENT_FILE):
     with open(EVENT_FILE, 'r') as f0:
-        print("~~~~~~~~~~~~~~ CHECK FILE EXISTS ~~~~~~~~~~~~~~~~")
         file_contents = f0.read()
         if not file_contents.strip():
-            print("~~~~~~~~~~~~~~ CHECK FILE : EMPTY ~~~~~~~~~~~~~~~~")
             dummydata = {'num_rate_readings': 0, 'highest_rated': 0, 'num_saves_readings': 0, 'most_active_user': 1, 'last_updated': '1800-01-01T23:59:59Z'}
             with open(EVENT_FILE, 'w') as f0:
                 json.dump(dummydata, f0, indent=2)
 if(not os.path.isfile(EVENT_FILE)):
-    print("~~~~~~~~~~~~~~ CHECK FILE : NOT EXIST ~~~~~~~~~~~~~~~~")
     dummydata = {'num_rate_readings': 0, 'highest_rated': 0, 'num_saves_readings': 0, 'most_active_user': 1, 'last_updated': '1800-01-01T23:59:59Z'}
-    with open(EVENT_FILE, 'w') as f0:
-        json.dump(dummydata, f0, indent=2)
+    with open(EVENT_FILE, 'w') as f1:
+        json.dump(dummydata, f1, indent=2)
 
 
 def populate_stats():
@@ -66,9 +63,6 @@ def populate_stats():
     # read current json
     if(os.path.isfile(EVENT_FILE)):
         with open(EVENT_FILE, 'r') as f3:
-#            print("<<<<<<<<<<<<<<<<<<")
-#            print(f3.read())
-#            print("<<<<<<<<<<<<<<<<<<")
             stats = json.load(f3)
     else:
         # If the file doesn’t yet exist, use default values for the stats??????
@@ -120,8 +114,6 @@ def populate_stats():
 
     with open(EVENT_FILE, 'w') as file:
         json.dump(newstats, file, indent=2)
-        # Note that values in the data.json file should correspond to the values in the JSON response from your GET /stats endpoint.
-        # ^ ive been reading this over and over and still dont understand if im correct yall. its past 11
 
     logger.debug(newstats)
     logger.info("---------------------> Periodic processing complete...")
@@ -139,11 +131,6 @@ def get_stats(): #/stats
     print("<<<<<<<<<<<<<<", EVENT_FILE)
     if(os.path.isfile(EVENT_FILE)):
         with open(EVENT_FILE, 'r') as f4:
-            # file_contents = f4.read()
- #           print(">>>>>>>>>>>>>>>>>>>")
-            # print(repr(file_contents))
- #           print(f4.read())
- #           print(">>>>>>>>>>>>>>>>>>>")
             f4.seek(0)
             statsread = json.load(f4)
     else:
