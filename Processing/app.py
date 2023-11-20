@@ -36,6 +36,23 @@ logger.info("Log Conf File: %s" % log_conf_file)
 
 EVENT_FILE = app_config["datastore"]["filename"]
 
+# --- Check if logs json file exists, or if its empty ---
+if os.path.isfile(EVENT_FILE):
+    with open(EVENT_FILE, 'r') as f0:
+        print("~~~~~~~~~~~~~~ CHECK FILE EXISTS ~~~~~~~~~~~~~~~~")
+        file_contents = f0.read()
+        if not file_contents.strip():
+            print("~~~~~~~~~~~~~~ CHECK FILE : EMPTY ~~~~~~~~~~~~~~~~")
+            dummydata = {'num_rate_readings': 0, 'highest_rated': 0, 'num_saves_readings': 0, 'most_active_user': 1, 'last_updated': '1800-01-01T23:59:59Z'}
+            with open(EVENT_FILE, 'w') as f0:
+                json.dump(dummydata, f0, indent=2)
+if(not os.path.isfile(EVENT_FILE)):
+    print("~~~~~~~~~~~~~~ CHECK FILE : NOT EXIST ~~~~~~~~~~~~~~~~")
+    dummydata = {'num_rate_readings': 0, 'highest_rated': 0, 'num_saves_readings': 0, 'most_active_user': 1, 'last_updated': '1800-01-01T23:59:59Z'}
+    with open(EVENT_FILE, 'w') as f0:
+        json.dump(dummydata, f0, indent=2)
+
+
 def populate_stats():
     """ Periodically update stats """
     num_rate_readings = 0
@@ -49,6 +66,9 @@ def populate_stats():
     # read current json
     if(os.path.isfile(EVENT_FILE)):
         with open(EVENT_FILE, 'r') as f3:
+#            print("<<<<<<<<<<<<<<<<<<")
+#            print(f3.read())
+#            print("<<<<<<<<<<<<<<<<<<")
             stats = json.load(f3)
     else:
         # If the file doesn’t yet exist, use default values for the stats??????
@@ -87,14 +107,14 @@ def populate_stats():
     updated_num_rate_readings= num_rate_readings + stats["num_rate_readings"]
     updated_num_saves_readings= num_saves_readings + stats["num_saves_readings"]
     updated_highest_rated= max(highest_rated,stats["highest_rated"])
-    updated_highest_rated = max(most_active_user,stats["most_active_user"])
+    most_active_user = max(most_active_user,stats["most_active_user"])
     # note not sure what to do with most common user calc here...
 
     newstats = {
     "num_rate_readings": updated_num_rate_readings,
     "highest_rated": updated_highest_rated,
     "num_saves_readings": updated_num_saves_readings,
-    "most_active_user": updated_highest_rated,
+    "most_active_user": most_active_user,
     "last_updated": current_timestamp
     }
 
@@ -116,8 +136,15 @@ def init_scheduler():
 # Your functions here
 def get_stats(): #/stats
     logger.info("===> Request for stats started...")
+    print("<<<<<<<<<<<<<<", EVENT_FILE)
     if(os.path.isfile(EVENT_FILE)):
         with open(EVENT_FILE, 'r') as f4:
+            # file_contents = f4.read()
+ #           print(">>>>>>>>>>>>>>>>>>>")
+            # print(repr(file_contents))
+ #           print(f4.read())
+ #           print(">>>>>>>>>>>>>>>>>>>")
+            f4.seek(0)
             statsread = json.load(f4)
     else:
         logger.error(f"Stats file {EVENT_FILE} cannot be found")
