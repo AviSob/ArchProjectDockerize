@@ -2,11 +2,10 @@ version: 1
 datastore:
   user: ""
   password: ""
-  hostname: "avi.westus3.cloudapp.azure.com"
+  hostname: "avi.northcentralus.cloudapp.azure.com"
   port: 3306
   db: "movies"
 events:
-  hostname: avi.westus3.cloudapp.azure.com
+  hostname: avi.northcentralus.cloudapp.azure.com
   port: 9092
   topic: events
-

@@ -4,6 +4,6 @@ eventrate:
 eventsave:
   url: http://localhost:8090/movies/save
 events:
-  hostname: avi.westus3.cloudapp.azure.com
+  hostname: avi.northcentralus.cloudapp.azure.com
   port: 9092
   topic: events
