@@ -7,7 +7,7 @@ export default function AppStats() {
     const [error, setError] = useState(null)
 
 	const getStats = () => {
-        fetch(`http://avi.westus3.cloudapp.azure.com:8100/movies/stats`)
+        fetch(`http://avi.northcentralus.cloudapp.azure.com:8100/movies/stats`)
             .then(res => res.json())
             .then((result)=>{
 				console.log("Received Stats")
@@ -19,7 +19,7 @@ export default function AppStats() {
             })
     }
     // const getStats = useCallback(() => {
-    //     fetch(`http://avi.westus3.cloudapp.azure.com:8100/movies/stats`)
+    //     fetch(`http://avi.northcentralus.cloudapp.azure.com:8100/movies/stats`)
     //       .then((res) => res.json())
     //       .then((result) => {
     //         console.log("Received Stats");

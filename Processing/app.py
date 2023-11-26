@@ -144,8 +144,6 @@ def get_stats(): #/stats
     return statsread, 200
 
 app = connexion.FlaskApp(__name__, specification_dir='')
-# CORS(app.app)
-# app.app.config['CORS_HEADERS'] = 'Content-Type'
 if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":
     CORS(app.app)
     app.app.config['CORS_HEADERS'] = 'Content-Type'
