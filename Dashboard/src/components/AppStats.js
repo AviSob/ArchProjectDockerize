@@ -7,7 +7,7 @@ export default function AppStats() {
     const [error, setError] = useState(null)
 
 	const getStats = () => {
-        fetch(`http://avi.northcentralus.cloudapp.azure.com:8100/movies/stats`)
+        fetch(`http://avi.northcentralus.cloudapp.azure.com/processing/movies/stats`)
             .then(res => res.json())
             .then((result)=>{
 				console.log("Received Stats")
@@ -18,21 +18,7 @@ export default function AppStats() {
                 setIsLoaded(true);
             })
     }
-    // const getStats = useCallback(() => {
-    //     fetch(`http://avi.northcentralus.cloudapp.azure.com:8100/movies/stats`)
-    //       .then((res) => res.json())
-    //       .then((result) => {
-    //         console.log("Received Stats");
-    //         setStats(result);
-    //         setIsLoaded(true);
-    //       })
-    //       .catch((error) => {
-    //         console.error("Error:", error);
-    //         setError(error);
-    //         setIsLoaded(true);
-    //       });
-    //   }, []);
-      
+  
       useEffect(() => {
         getStats();
       }, [getStats]);
