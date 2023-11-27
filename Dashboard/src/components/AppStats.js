@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../App.css';
 
 export default function AppStats() {
@@ -7,6 +7,7 @@ export default function AppStats() {
     const [error, setError] = useState(null)
 
 	const getStats = () => {
+	
         fetch(`http://avi.northcentralus.cloudapp.azure.com/processing/movies/stats`)
             .then(res => res.json())
             .then((result)=>{
@@ -18,11 +19,7 @@ export default function AppStats() {
                 setIsLoaded(true);
             })
     }
-  
-      useEffect(() => {
-        getStats();
-      }, [getStats]);
-      
+
     useEffect(() => {
 		const interval = setInterval(() => getStats(), 2000); // Update every 2 seconds
 		return() => clearInterval(interval);

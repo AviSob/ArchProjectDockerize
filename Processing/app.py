@@ -128,7 +128,6 @@ def init_scheduler():
 # Your functions here
 def get_stats(): #/stats
     logger.info("===> Request for stats started...")
-    print("<<<<<<<<<<<<<<", EVENT_FILE)
     if(os.path.isfile(EVENT_FILE)):
         with open(EVENT_FILE, 'r') as f4:
             f4.seek(0)
