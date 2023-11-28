@@ -50,7 +50,6 @@ def get_movie_ratings(index): #/movies/movie_ratings?index=X
 
             if(msg['type'] == 'rate'):
                 list_of_msg.append(msg)
-                print(msg)
             
         payload = list_of_msg[index]
         response = {
@@ -80,7 +79,6 @@ def get_movie_saved(index): #/movies/movie_ratings?index=X
 
             if(msg['type'] == 'save'):
                 list_of_msg.append(msg)
-                print(msg)
             
         payload = list_of_msg[index]
         response = {
@@ -96,13 +94,9 @@ def get_movie_saved(index): #/movies/movie_ratings?index=X
 
 
 app = connexion.FlaskApp(__name__, specification_dir='')
-# CORS(app.app, resources={r"/*": {"origins": "*"}})
-# # CORS(app.app)
-# app.app.config['CORS_HEADERS'] = 'Content-Type'
 
 # disable the CORS in the test environment
 if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":
-    # CORS(app.app, resources={r"/*": {"origins": "*"}}) # maybe add this?
     CORS(app.app) # maybe comment this out?
     app.app.config['CORS_HEADERS'] = 'Content-Type'
 app.add_api("openapi.yaml", base_path="/audit", strict_validation=True, validate_responses=True)
