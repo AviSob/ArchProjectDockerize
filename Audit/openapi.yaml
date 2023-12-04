@@ -117,45 +117,82 @@ components:
     MovieRatings:
       type: object
       required:
-        - movie_id
-        - rating
-        - review
+        - datetime
+        - payload
+        - type
       properties:
-        movie_id:
+        datetime:
           type: string
-          example: breaking_bad_01
-        movie_name:
+          example: "2023-12-04T03:16:19"
+        payload:
+          type: object
+          required:
+            - movie_id
+            - movie_name
+            - rating
+            - review
+            - trace_id
+          properties:
+            movie_id:
+              type: string
+              example: breaking_bad_01
+            movie_name:
+              type: string
+              example: Breaking Bad
+            rating:
+              type: number
+              example: 10
+            review:
+              type: string
+              example: its great yall
+            trace_id:
+              type: string
+              example: "20231204031619382091"
+        type:
           type: string
-          example: Breaking Bad
-        rating:
-          type: number
-          example: 10
-        review:
-          type: string
-          example: its great yall
+          example: rate
     MovieSaved:
       type: object
       required:
-        - user_id
-        - movie_id
-        - season
+        - datetime
+        - payload
+        - type
       properties:
-        user_id:
-          type: number
-          example: 19238902
-        movie_id:
+        datetime:
           type: string
-          example: breaking_bad
-        save_date:
+          example: "2023-12-04T03:18:57"
+        payload:
+          type: object
+          required:
+            - movie_id
+            - notes
+            - save_date
+            - season
+            - trace_id
+            - user_id
+          properties:
+            movie_id:
+              type: string
+              example: breaking_bad
+            notes:
+              type: string
+              example: "Must-watch series"
+            save_date:
+              type: string
+              format: date
+              example: '2023-08-09'
+            season:
+              type: number
+              example: 1
+            trace_id:
+              type: string
+              example: "20231204031619382091"
+            user_id:
+              type: number
+              example: 19238902
+        type:
           type: string
-          format: date
-          example: '2023-08-09'
-        notes:
-          type: string
-          example: "Must-watch series"
-        season:
-          type: number
-          example: 1
+          example: save
     Health:
       required:
       - app_status

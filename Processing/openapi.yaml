@@ -64,14 +64,14 @@ components:
     ReadingStats:
       required:
       - num_rate_readings
-      - num_save_readings
+      - num_saves_readings
       - most_active_user
       - highest_rated
       properties:
         num_rate_readings:
           type: integer
           example: 20
-        num_save_readings:
+        num_saves_readings:
           type: integer
           example: 50
         most_active_user:
