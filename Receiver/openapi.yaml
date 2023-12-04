@@ -41,6 +41,38 @@ paths:
           description: Movie saved successfully
         '400':
           description: invalid input, movie was not added
+  /health:
+    get:
+      tags:
+        - dev
+      summary: check if service is up or down
+      operationId: app.health
+      description: return 200 if service is up
+      responses:
+        '200':
+          description: Service is up
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Health'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 components:
   schemas:
     MovieRating:
@@ -85,3 +117,10 @@ components:
         - user_id
         - movie_id
         - season
+    Health:
+      required:
+      - app_status
+      properties:
+        app_status:
+          type: string
+          example: "Running"

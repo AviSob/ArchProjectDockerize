@@ -12,6 +12,7 @@ import os.path
 from collections import Counter
 from flask_cors import CORS, cross_origin
 import os
+from flask import jsonify
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
@@ -141,6 +142,11 @@ def get_stats(): #/stats
     logger.info("===> Request for stats complete...")
     
     return statsread, 200
+
+def health(): #/health
+    return jsonify(
+        app_status= "Running"
+    )
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":

@@ -17,6 +17,7 @@ from threading import Thread
 from sqlalchemy import and_
 import time
 import os
+from flask import jsonify
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
@@ -89,6 +90,11 @@ def get_saved_movies(start_timestamp, end_timestamp):
     logger.info(f"Query for movies saved between {start_timestamp} and {end_timestamp} returns {len(results_list)} results")
 
     return results_list, 200
+
+def health(): #/health
+    return jsonify(
+        app_status= "Running"
+    )
 
 # =============== KAFKA
 def process_messages():

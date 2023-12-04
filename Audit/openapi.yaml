@@ -24,9 +24,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/MovieRatings'
+                $ref: '#/components/schemas/MovieRatings'
         '400':
           description: Invalid request
           content:
@@ -63,9 +61,39 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/MovieSaved'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
                 type: object
-                items:
-                  $ref: '#/components/schemas/MovieSaved'
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /health:
+    get:
+      tags:
+        - dev
+      summary: check if service is up or down
+      operationId: app.health
+      description: return 200 if service is up
+      responses:
+        '200':
+          description: Service is up
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
         '400':
           description: Invalid request
           content:
@@ -128,4 +156,10 @@ components:
         season:
           type: number
           example: 1
-
+    Health:
+      required:
+      - app_status
+      properties:
+        app_status:
+          type: string
+          example: "Running"

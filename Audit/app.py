@@ -11,6 +11,7 @@ from pykafka.common import OffsetType
 from threading import Thread
 from flask_cors import CORS
 import os
+from flask import jsonify
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
@@ -92,6 +93,10 @@ def get_movie_saved(index): #/movies/movie_ratings?index=X
         logger.error("Could not find BP at index %d" % index)
         return { "message": "Not Found"}, 404
 
+def health(): #/health
+    return jsonify(
+        app_status= "Running"
+    )
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 

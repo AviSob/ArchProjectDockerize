@@ -17,11 +17,41 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/ReadingStats'
+                $ref: '#/components/schemas/ReadingStats'
         '400':
           description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /health:
+    get:
+      tags:
+        - dev
+      summary: check if service is up or down
+      operationId: app.health
+      description: return 200 if service is up
+      responses:
+        '200':
+          description: Service is up
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Health'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -50,3 +80,10 @@ components:
         highest_rating:
           type: integer
           example: 9
+    Health:
+      required:
+      - app_status
+      properties:
+        app_status:
+          type: string
+          example: "Running"

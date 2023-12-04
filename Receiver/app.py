@@ -9,6 +9,7 @@ import logging.config
 from pykafka import KafkaClient
 import time
 import os
+from flask import jsonify
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
@@ -76,6 +77,11 @@ def rate(body): #/movies/rate
 def save_movie(body): #/movies/save
     res=log_data(body, "save")
     return NoContent, res[1]
+
+def health(): #/health
+    return jsonify(
+        app_status= "Running"
+    )
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api("openapi.yaml", base_path="/receiver", strict_validation=True, validate_responses=True)
