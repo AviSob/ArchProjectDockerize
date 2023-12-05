@@ -59,13 +59,16 @@ def check_health():
     
     # scan health for each url endpoint 
     for url in URL_list:
-        result_raw = requests.get(url)
-        
-        if(result_raw.status_code == 200):
-            status = "Running"
-        else:
+        try:
+            result_raw = requests.get(url, timeout=5)
+           
+            if(result_raw.status_code == 200):
+                status = "Running"
+            else:
+                status = "Down"
+        except:
             status = "Down"
-            
+
         service = url.split("/")[-2]
         current_timestamp = (datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"))
         
