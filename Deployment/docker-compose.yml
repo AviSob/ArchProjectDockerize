@@ -135,13 +135,15 @@ services:
       - "processing"
       - "audit_log"
       - "dashboard"
+      - "healthcheck"
     # Connects the port 80 of the nginx container to localhost:80 or localhost
     ports:
       - "80:80"
     networks:
       - "api.network"
 
-  health_check:
+# health check
+  healthcheck:
     image: health_check:latest
     ports:
       - "8120"
@@ -150,20 +152,14 @@ services:
     volumes:
       - /home/azureuser/config/health_check:/config
       - /home/azureuser/logs:/logs
-      - sqlite:/app/health.sqlite
+#      - sqlite:/app/health.sqlite
     environment:
       - TARGET_ENV=test
-    depends_on:
-      - "receiver"
-      - "storage"
-      - "processing"
-      - "audit_log"
-      - "dashboard"
 
 volumes:
   my-db:
   processing-db:
-  sqlite:
+#  sqlite:
 
 networks:
   api.network:
