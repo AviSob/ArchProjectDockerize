@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  description: This API provides health
+  version: "1.0.0"
+  title: Health API
+  contact:
+    email: asoboleva@my.bcit.ca
+paths:
+  /status:
+    get:
+      summary: Gets the health stats
+      operationId: app.get_health_stats
+      description: Gets health of all services
+      responses:
+        '200':
+          description: Successfully returned a list of events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health_Stats'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+ 
+ 
+components:
+  schemas:
+    Health_Stats:
+      type: object
+      # required:
+      #   - user_id
+      #   - movie_id
+      #   - season
+      properties:
+        receiver:
+          type: string
+          example: "Running"
+        storage:
+          type: string
+          example: "Down"
+        processing:
+          type: string
+          example: "Running"
+        audit:
+          type: string
+          example: "Running"
+        last_updated:
+          type: string
+          example: "Running"

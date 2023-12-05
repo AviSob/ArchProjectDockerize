@@ -1,0 +1,9 @@
+version: 1
+period_sec: 5
+domain: "http://avi.northcentralus.cloudapp.azure.com"
+urls:
+ receiver: "/receiver/health"
+ storage: "/storage/health"
+ processing: "/processing/health"
+ audit: "/audit/health"
+
