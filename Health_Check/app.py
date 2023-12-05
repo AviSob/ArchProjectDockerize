@@ -109,9 +109,9 @@ if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":
     CORS(app.app)
     app.app.config['CORS_HEADERS'] = 'Content-Type'
 
-# app.add_api("openapi.yaml", base_path="/processing", strict_validation=True, validate_responses=True) #------ BRING BACK
+app.add_api("openapi.yaml", base_path="/healthcheck", strict_validation=True, validate_responses=True) #------ BRING BACK
 # app.add_api("openapi.yaml", strict_validation=True, validate_responses=True) #------ BRING BACK
-app.add_api("openapi.yaml", base_path="/healthcheck") #------ BRING BACK
+# app.add_api("openapi.yaml", base_path="/healthcheck") #------ BRING BACK
 
 if __name__ == "__main__":
     init_scheduler() #------ BRING BACK

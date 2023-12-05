@@ -8,7 +8,7 @@ export default function AppStats() {
 
 	const getStats = () => {
 	
-        fetch(`http://avi.northcentralus.cloudapp.azure.com/processing/movies/stats`)
+        fetch(`http://avi.northcentralus.cloudapp.azure.com/healthcheck/status`)
             .then(res => res.json())
             .then((result)=>{
 				console.log("Received Stats")
@@ -34,16 +34,16 @@ export default function AppStats() {
             <div className='all'>
                 <div className='sectionsContainer'>
                     <div className='section'>
-                        <p><b>total number of rated movies:</b></p> {stats['num_rate_readings']}
+                        <p><b>Receiver:</b></p> {stats['receiver']}
                     </div>
                     <div className='section'>
-                        <p><b>total number of saved movies:</b></p> {stats['num_saves_readings']}                         
+                        <p><b>Storage:</b></p> {stats['storage']}                         
                     </div>
                     <div className='section'>
-                        <p><b>Most active user:</b></p> {stats['most_active_user']}                         
+                        <p><b>Processing:</b></p> {stats['processing']}                         
                     </div>
                     <div className='section'>
-                        <p><b>highest rating by:</b></p> {stats['highest_rated']}                         
+                        <p><b>Audit:</b></p> {stats['audit']}                         
                     </div>
                 </div>
                 <h3>Last Updated: {stats['last_updated']}</h3>
