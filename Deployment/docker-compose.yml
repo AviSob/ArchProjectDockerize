@@ -141,9 +141,29 @@ services:
     networks:
       - "api.network"
 
+  health_check:
+    image: health_check:latest
+    ports:
+      - "8120"
+    networks:
+      - "api.network"
+    volumes:
+      - /home/azureuser/config/health_check:/config
+      - /home/azureuser/logs:/logs
+      - sqlite:/app/health.sqlite
+    environment:
+      - TARGET_ENV=test
+    depends_on:
+      - "receiver"
+      - "storage"
+      - "processing"
+      - "audit_log"
+      - "dashboard"
+
 volumes:
   my-db:
   processing-db:
+  sqlite:
 
 networks:
   api.network:
