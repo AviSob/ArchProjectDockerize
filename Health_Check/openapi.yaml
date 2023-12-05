@@ -27,16 +27,16 @@ paths:
                 properties:
                   message:
                     type: string
- 
- 
 components:
   schemas:
     Health_Stats:
       type: object
-      # required:
-      #   - user_id
-      #   - movie_id
-      #   - season
+      required:
+        - receiver
+        - storage
+        - processing
+        - audit
+        - last_updated
       properties:
         receiver:
           type: string
